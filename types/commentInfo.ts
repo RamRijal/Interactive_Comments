@@ -14,5 +14,14 @@ export type CommentProps = {
   createdAt: string;
   score: number;
   user: UserProps;
-  replies: CommentProps[];
+  replies: Reply[];
 };
+
+export interface Reply {
+  id: number;
+  content: string;
+  createdAt: string;
+  score: number;
+  user: UserProps;
+  replyingTo: string;
+}
