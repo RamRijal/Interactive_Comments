@@ -6,18 +6,16 @@ import TextContainer from "./TextContainer"
 
 const HomePage = () => {
     return (
-        <Box sx={{display:"flex",flexDirection:"column"}}>
-            <Box sx={{ height: "100%", width: '900px', display: "flex", alignItems: "center", justifyItems: "center" }}>
+        <Box sx={{ width: 3/5, display: "flex", flexDirection: "column" }}>
+            <Box sx={{  display: "flex", alignItems: "center", justifyItems: "center",marginTop:2 }}>
                 <Box sx={{}} >
                     {data.comments.map((item) => {
-                        return (<CommentDisplay key={item.id} comment={item.content} image={item.user.image.webp} name={item.user.username} duration={item.createdAt} score={item.score} />)
+                        return (<CommentDisplay key={item.id} id={item.id} comment={item.content} image={item.user.image.webp} name={item.user.username} duration={item.createdAt} score={item.score} isReply={false} replies={item.replies}/>)
                     })
                     }
                 </Box>
             </Box>
-            <Box sx={{}} >
-                <TextContainer />
-            </Box>
+            <TextContainer isReplyClicked={false} />
         </Box>
     )
 }
