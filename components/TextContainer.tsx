@@ -1,14 +1,34 @@
 'use client'
-import { Box, Button, InputBase, useTheme } from '@mui/material'
-import Image from 'next/image'
-import data from "@/data.json"
+import { currentUserProps } from '@/types/commentInfo';
+import { Box, Button, InputBase, useTheme } from '@mui/material';
+import Image from 'next/image';
+import { useState } from 'react';
 
-interface isReplyClickedProps{
+interface TextContainerProps {
     isReplyClicked: boolean;
+    currentUser: currentUserProps;
+    onSubmit: (content: string) => void;
+    replyingTo?:string;
 }
-const TextContainer = ({ isReplyClicked }:isReplyClickedProps) => {
+const TextContainer = ({ isReplyClicked, currentUser, onSubmit,replyingTo }: TextContainerProps) => {
     const theme = useTheme()
-    const { currentUser } = data;
+    const [content, setContent] = useState('')
+
+    const handleSubmit = () => {
+        if (content.trim()) {
+            const finalContent = isReplyClicked && replyingTo
+                ? `@${replyingTo} ${content}`
+                : content;
+            onSubmit(finalContent);
+            setContent('');
+        }
+    };
+    const getPlaceholder = () => {
+        if (isReplyClicked && replyingTo) {
+            return `Reply to @${replyingTo}...`;
+        }
+        return 'Add a comment...';
+    };
     return (
 
         <Box
@@ -33,7 +53,7 @@ const TextContainer = ({ isReplyClicked }:isReplyClickedProps) => {
                 flexDirection: "row",
             }}>
 
-                <Image src={currentUser.image.png} height={40} width={40} alt={currentUser.username} />
+                <Image src={currentUser.image.webp} height={40} width={40} alt={currentUser.username} />
             </Box>
             <Box sx={{
                 flex: 1,
@@ -43,7 +63,9 @@ const TextContainer = ({ isReplyClicked }:isReplyClickedProps) => {
             }}>
                 <InputBase
                     type='textbox'
-                    placeholder="Add a comment..."
+                    placeholder={getPlaceholder()}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
                     sx={{
                         border: 2,
                         borderColor: theme.palette.divider,
@@ -67,18 +89,20 @@ const TextContainer = ({ isReplyClicked }:isReplyClickedProps) => {
                     flexDirection: "row",
                     alignItems: "center"
                 }}>
-                    <Button sx={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        backgroundColor: theme.palette.primary.main,
-                        color: theme.palette.common.white,
-                        paddingY: 1.5,
-                        paddingX: 3.5,
-                        '&:hover': {
-                            backgroundColor: theme.palette.primary.dark // Use theme primary dark color on hover
+                    <Button
+                        onClick={handleSubmit}
+                        sx={{
+                            fontWeight: "600",
+                            fontSize: "14px",
+                            backgroundColor: theme.palette.primary.main,
+                            color: theme.palette.common.white,
+                            paddingY: 1.5,
+                            paddingX: 3.5,
+                            '&:hover': {
+                                backgroundColor: theme.palette.primary.dark // Use theme primary dark color on hover
+                            }
                         }
-                    }
-                    } > {isReplyClicked ? "REPLY" : "SEND"}</Button>
+                        } > {isReplyClicked ? "REPLY" : "SEND"}</Button>
                 </Box>
             </Box>
         </Box >)

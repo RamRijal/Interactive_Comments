@@ -9,7 +9,8 @@ export default function Home() {
         display: "flex",
         justifyContent: "center",
         backgroundColor: theme.palette.background.paper,
-        height:'100%'
+        height:'100%',
+        minWidth:'100vh'
       }}>
       <HomePage />
     </Box>
